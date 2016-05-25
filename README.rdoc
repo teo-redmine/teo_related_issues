@@ -1,3 +1,4 @@
 = teo_related_issues
 
-Description goes here
+Author: Junta de Andalucía
+License: GPLv2
