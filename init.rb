@@ -1,8 +1,12 @@
+require 'redmine'
+#require 'issues_controller_patch'
+require 'issue_relations_helper_patch'
+
 Redmine::Plugin.register :teo_related_issues do
   name 'Teo Related Issues plugin'
-  author 'Author name'
-  description 'This is a plugin for Redmine'
+  author 'Junta de Andalucía'
+  description 'Muestra las peticiones relacionadas agrupadas por proyecto (contenedor)'
   version '0.0.1'
-  url 'http://example.com/path/to/plugin'
-  author_url 'http://example.com/about'
+  url 'https://github.com/teo-redmine/teo_related_issues'
+  author_url "http://www.juntadeandalucia.es"
 end
