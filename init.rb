@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'redmine'
 #require 'issues_controller_patch'
 require 'issue_relations_helper_patch'
