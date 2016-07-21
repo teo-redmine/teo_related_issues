@@ -1,8 +1,8 @@
-# teo_related_issues
+= teo_related_issues
 
 Este plugin de redmine permite mostrar las relaciones entre peticiones agrupadas por proyectos.
 
-## Instalación
+== Instalación
 
 Copiar o realizar un checkout de este repositorio en el directorio de plugins de
 redmine: `redmine/plugins/teo_related_issues`
@@ -11,13 +11,13 @@ El plugin sólo modifica la vista, por lo que no es necesario ejecutar ninguna m
 
 Una vez copiado debemos asegurarnos que el propietario y el grupo del plugin son correctos.
 También debemos de asegurarnos de que los permisos son los adecuados, ejecutando la siguiente orden para restablecer los permisos por defectos en ficheros y carpetas:
-```
-chmod -R a+rX teo_related_issues/
-```
+
+    chmod -R a+rX teo_related_issues/
+
 
 Por último sólo queda reiniciar Redmine.
 
-## Desinstalación
+== Desinstalación
 
 Basta con eliminar la carpeta del plugin y reiniciar Redmine.
 
