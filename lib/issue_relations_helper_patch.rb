@@ -30,24 +30,30 @@ module IssueRelationsHelperPatch
                 ancestors << issue unless issue.leaf?
             end
         end
-
-        def grouped_issue_list(issues, query, issue_count_by_group, &block)
+        
+        def grouped_issue_list(issues, query, &block)
             previous_group, first = false, true
             issue_list(issues) do |issue, level|
             group_name = group_count = nil
             if query.grouped? && ((group = query.group_by_column.value(issue)) != previous_group || first)
                 if group.blank? && group != false
-                    group_name = "(#{l(:label_blank_value)})"
+                    group_name = "(#{l(:label_blank_value)})" 
                 else
                     group_name = column_content(query.group_by_column, issue)
                 end
                 group_name ||= ""
-                group_count = issue_count_by_group[group]
+                  
+                if query.result_count_by_group.any? || query.result_count_by_group != ""
+                	group_count =query.result_count_by_group[group]
+                else 
+                	group_count=0               
+                end 
             end
             yield issue, level, group_name, group_count
                 previous_group, first = group, false
             end
         end
+
 
         # Renders a HTML/CSS tooltip
         #
@@ -112,29 +118,29 @@ module IssueRelationsHelperPatch
             s.html_safe
         end
 
-        def issue_estimated_hours_details(issue)
-            if issue.total_estimated_hours.present?
-                if issue.total_estimated_hours == issue.estimated_hours
-                    l_hours_short(issue.estimated_hours)
-                else
-                    s = issue.estimated_hours.present? ? l_hours_short(issue.estimated_hours) : ""
-                    s << " (#{l(:label_total)}: #{l_hours_short(issue.total_estimated_hours)})"
-                    s.html_safe
-                end
-            end
-        end
+      #  def issue_estimated_hours_details(issue)
+      #      if issue.total_estimated_hours.present?
+      #          if issue.total_estimated_hours == issue.estimated_hours
+      #              l_hours_short(issue.estimated_hours)
+      #          else
+      #              s = issue.estimated_hours.present? ? l_hours_short(issue.estimated_hours) : ""
+      #              s << " (#{l(:label_total)}: #{l_hours_short(issue.total_estimated_hours)})"
+      #              s.html_safe
+      #          end
+      #      end
+      #  end
 
-        def issue_spent_hours_details(issue)
-            if issue.total_spent_hours > 0
-                if issue.total_spent_hours == issue.spent_hours
-                    link_to(l_hours_short(issue.spent_hours), issue_time_entries_path(issue))
-                else
-                    s = issue.spent_hours > 0 ? l_hours_short(issue.spent_hours) : ""
-                    s << " (#{l(:label_total)}: #{link_to l_hours_short(issue.total_spent_hours), issue_time_entries_path(issue)})"
-                    s.html_safe
-                end
-            end
-        end
+      #  def issue_spent_hours_details(issue)
+      #      if issue.total_spent_hours > 0
+      #          if issue.total_spent_hours == issue.spent_hours
+      #              link_to(l_hours_short(issue.spent_hours), issue_time_entries_path(issue))
+      #          else
+      #              s = issue.spent_hours > 0 ? l_hours_short(issue.spent_hours) : ""
+      #              s << " (#{l(:label_total)}: #{link_to l_hours_short(issue.total_spent_hours), issue_time_entries_path(issue)})"
+      #              s.html_safe
+      #          end
+      #      end
+      #  end
 
         # Returns an array of error messages for bulk edited issues
         def bulk_edit_error_messages(issues)
@@ -195,11 +201,11 @@ module IssueRelationsHelperPatch
             end
         end
 
-        def issue_fields_rows
-            r = IssueFieldsRows.new
-            yield r
-            r.to_html
-        end
+        #def issue_fields_rows
+        #    r = IssueFieldsRows.new
+        #    yield r
+        #    r.to_html
+        #end
 
         def render_custom_fields_rows(issue)
             values = issue.visible_custom_field_values
@@ -292,7 +298,7 @@ module IssueRelationsHelperPatch
             ) + "\n"
         end
 
-        def render_sidebar_queries
+         def render_sidebar_queries(param,paramg)
             out = ''.html_safe
             out << query_links(l(:label_my_queries), sidebar_queries.select(&:is_private?))
             out << query_links(l(:label_query_plural), sidebar_queries.reject(&:is_private?))

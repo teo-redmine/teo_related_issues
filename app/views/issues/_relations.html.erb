@@ -3,7 +3,7 @@
   <%= link_to "Consultar", issues_path(:set_filter => 1, :relates => @issue, :group_by => :project) %>
 <% end %>
 <% if User.current.allowed_to?(:manage_issue_relations, @project) and @relations.present? %>
-  |
+  
 <% end %>
 <% if User.current.allowed_to?(:manage_issue_relations, @project) %>
   <%= toggle_link l(:button_add), 'new-relation-form', {:focus => 'relation_issue_to_id'} %>
@@ -11,11 +11,12 @@
 </div>
 
 <p><strong><%=l(:label_related_issues)%></strong></p>
+<% @issue_count_by_group = "" %>
 
 <% if @relations.present? %>
 
 <% @query = IssueQuery.new(:name => "_", :filters => { 'relates' => {:operator => "=", :values => [@issue.id]} }, :group_by => :project, :column_names => [:tracker, :subject]) %>
-<% @issue_count_by_group = @query.issue_count_by_group %>
+<% @issue_count_by_group = @query.result_count_by_group %>
 <% @issues = @query.issues(:order => :id) %>
 
 <% @other_issues = [] %>
@@ -25,8 +26,9 @@
 <% @other_issues -= @issues %>
 
 <form>
+
 <table class="list issues">
-    <% grouped_issue_list(@issues, @query, @issue_count_by_group) do |issue, level, group_name, group_count, group_totals| -%>
+    <% grouped_issue_list(@issues, @query) do |issue, level, group_name, group_count, group_totals| -%>
     <% if group_name %>
       <% reset_cycle %>
       <tr class="group open">
@@ -52,7 +54,7 @@
                                       :data => {:confirm => l(:text_are_you_sure)},
                                       :title => l(:label_relation_delete) if User.current.allowed_to?(:manage_issue_relations, @project) %></td>
     </tr>
-    <% end -%>
+    <% end %>
 </table>
 
 <% if not @other_issues.empty? %>
